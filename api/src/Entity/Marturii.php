@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MarturiiRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MarturiiRepository::class)]
@@ -23,6 +25,14 @@ class Marturii
 
     #[ORM\Column(type: 'date', nullable: true)]
     private $data;
+
+    #[ORM\OneToMany(mappedBy: 'marturiiID', targetEntity: mesajaudio::class)]
+    private $mesajAudioID;
+
+    public function __construct()
+    {
+        $this->mesajAudioID = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +71,36 @@ class Marturii
     public function setData(?\DateTimeInterface $data): self
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, mesajaudio>
+     */
+    public function getMesajAudioID(): Collection
+    {
+        return $this->mesajAudioID;
+    }
+
+    public function addMesajAudioID(mesajaudio $mesajAudioID): self
+    {
+        if (!$this->mesajAudioID->contains($mesajAudioID)) {
+            $this->mesajAudioID[] = $mesajAudioID;
+            $mesajAudioID->setMarturiiID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMesajAudioID(mesajaudio $mesajAudioID): self
+    {
+        if ($this->mesajAudioID->removeElement($mesajAudioID)) {
+            // set the owning side to null (unless already changed)
+            if ($mesajAudioID->getMarturiiID() === $this) {
+                $mesajAudioID->setMarturiiID(null);
+            }
+        }
 
         return $this;
     }

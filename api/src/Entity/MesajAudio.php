@@ -27,6 +27,9 @@ class MesajAudio
     #[ORM\Column(type: 'string', length: 255)]
     private $path;
 
+    #[ORM\ManyToOne(targetEntity: Marturii::class, inversedBy: 'mesajAudioID')]
+    private $marturiiID;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +79,18 @@ class MesajAudio
     public function setPath(string $path): self
     {
         $this->path = $path;
+
+        return $this;
+    }
+
+    public function getMarturiiID(): ?Marturii
+    {
+        return $this->marturiiID;
+    }
+
+    public function setMarturiiID(?Marturii $marturiiID): self
+    {
+        $this->marturiiID = $marturiiID;
 
         return $this;
     }
